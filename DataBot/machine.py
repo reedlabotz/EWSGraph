@@ -16,12 +16,14 @@ class Machine:
     self.username = ''
     self.password = ''
 
+    self.snapshot = None
+
   def set_credentials(self,username,password):
     self.username = username
     self.password = password
   
   def get_data(self):
-    snapshot = Snapshot(self,datetime.now())
+    self.snapshot = Snapshot(self,datetime.now())
 
     try:
       #get an SSH clinet to communicate with the host
@@ -35,7 +37,7 @@ class Machine:
 
       data = stdout.readlines()
     
-      self.process_output(data,snapshot)
+      self.process_output(data)
 
       client.close()
       print("Got data from %s" % self.name)
@@ -49,10 +51,9 @@ class Machine:
       return
 
     #do the final processing for the snapshot
-    snapshot.calc_averages()
-    print(snapshot)
+    self.snapshot.calc_averages()
 
-  def process_output(self,data,snapshot):
+  def process_output(self,data):
     #grab useful data from lines
     lineCounter = -1
     for line in data:
@@ -60,16 +61,16 @@ class Machine:
         lineCounter = 0
       if(lineCounter == 0):
         user_count = self.process_output_line0(line)
-        snapshot.add_user_count_reading(user_count)
+        self.snapshot.add_user_count_reading(user_count)
       if(lineCounter == 1):
         task_count = self.process_output_line1(line)
-        snapshot.add_task_count_reading(task_count)
+        self.snapshot.add_task_count_reading(task_count)
       if(lineCounter == 2):
         cpu_user, cpu_system = self.process_output_line2(line)
-        snapshot.add_cpu_reading(cpu_user,cpu_system)
+        self.snapshot.add_cpu_reading(cpu_user,cpu_system)
       if(lineCounter == 3):
         mem_used, mem_free = self.process_output_line3(line)
-        snapshot.add_mem_reading(mem_used,mem_free)
+        self.snapshot.add_mem_reading(mem_used,mem_free)
       lineCounter+=1
 
   def process_output_line0(self,line):
@@ -88,3 +89,5 @@ class Machine:
     m = re.search(r'(\d+)k used,[ ]*(\d+)k free',line)
     return (int(m.group(1)),int(m.group(2)))
 
+  def insert_db(self,dbcursor):
+    a=1
