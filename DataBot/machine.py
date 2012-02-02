@@ -1,0 +1,90 @@
+from __future__ import print_function
+import paramiko
+import sys
+import traceback
+import re
+from datetime import datetime
+
+from snapshot import Snapshot
+
+class Machine:
+  def __init__(self,id,name,url):
+    self.id = id
+    self.name = name
+    self.url = url
+
+    self.username = ''
+    self.password = ''
+
+  def set_credentials(self,username,password):
+    self.username = username
+    self.password = password
+  
+  def get_data(self):
+    snapshot = Snapshot(self,datetime.now())
+
+    try:
+      #get an SSH clinet to communicate with the host
+      client = paramiko.SSHClient()
+      client.load_system_host_keys()
+      client.set_missing_host_key_policy(paramiko.WarningPolicy)
+      client.connect(self.url,username=self.username,password=self.password)
+
+      print("Grabbing data from %s, should take 15 seconds" % self.name)
+      stdin, stdout, stderr = client.exec_command('top -b -d3 -n5')
+
+      data = stdout.readlines()
+    
+      self.process_output(data,snapshot)
+
+      client.close()
+      print("Got data from %s" % self.name)
+    except Exception, e:
+      print("Error in SSH on host %s" % self.name)
+      traceback.print_exc()
+      try:
+        client.close()
+      except:
+        pass
+      return
+
+    #do the final processing for the snapshot
+    snapshot.calc_averages()
+    print(snapshot)
+
+  def process_output(self,data,snapshot):
+    #grab useful data from lines
+    lineCounter = -1
+    for line in data:
+      if(line[:5] == "top -"):
+        lineCounter = 0
+      if(lineCounter == 0):
+        user_count = self.process_output_line0(line)
+        snapshot.add_user_count_reading(user_count)
+      if(lineCounter == 1):
+        task_count = self.process_output_line1(line)
+        snapshot.add_task_count_reading(task_count)
+      if(lineCounter == 2):
+        cpu_user, cpu_system = self.process_output_line2(line)
+        snapshot.add_cpu_reading(cpu_user,cpu_system)
+      if(lineCounter == 3):
+        mem_used, mem_free = self.process_output_line3(line)
+        snapshot.add_mem_reading(mem_used,mem_free)
+      lineCounter+=1
+
+  def process_output_line0(self,line):
+    m = re.search(r' (\d+) users',line)
+    return int(m.group(1))
+
+  def process_output_line1(self,line):
+    m = re.search(r' (\d+) total',line)
+    return int(m.group(1))
+
+  def process_output_line2(self,line):
+    m = re.search(r' (\d+.\d+)%us,[ ]*(\d+.\d+)%sy',line)
+    return (float(m.group(1)),float(m.group(2)))
+  
+  def process_output_line3(self,line):
+    m = re.search(r'(\d+)k used,[ ]*(\d+)k free',line)
+    return (int(m.group(1)),int(m.group(2)))
+
