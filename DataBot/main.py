@@ -16,12 +16,12 @@ linux2.set_credentials('labotz1','')
 machines.append(linux2)
 
 linux3 = Machine(3,'linux3','linux3.ews.illinois.edu')
-linux3.set_credentials('labotz3','')
-#machines.append(linux3)
+linux3.set_credentials('labotz1','')
+machines.append(linux3)
 
 linux4 = Machine(4,'linux4','linux4.ews.illinois.edu')
 linux4.set_credentials('labotz1','')
-#machines.append(linux4)
+machines.append(linux4)
 
 #setup database
 dbhost = 'dcs-projects.cs.illinois.edu'

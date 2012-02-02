@@ -53,3 +53,8 @@ class Snapshot:
     self.user_count_avg = average_mid(self.user_count)
     self.task_count_avg = average_mid(self.task_count)
 
+  def insert_db(self,dbcursor):
+    sql = "INSERT INTO `snapshots` (machine_id,time,cpu_user,cpu_system,mem_used,mem_free,user_count,task_count) VALUES "
+    sql +="('%d','%s','%f','%f','%d','%d','%d','%d')"%(self.machine.get_id(),self.time,self.cpu_user_avg,self.cpu_system_avg,self.mem_used_avg,self.mem_free_avg,self.user_count_avg,self.task_count_avg)
+    dbcursor.execute(sql)
+    print("Inserted 1 snapshot")

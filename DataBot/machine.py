@@ -90,4 +90,9 @@ class Machine:
     return (int(m.group(1)),int(m.group(2)))
 
   def insert_db(self,dbcursor):
-    a=1
+    if(self.snapshot):
+      print("Inserting snapshot for %s"%self.name)
+      self.snapshot.insert_db(dbcursor)
+
+  def get_id(self):
+    return self.id
