@@ -4,6 +4,7 @@
    var currentStartTime = null;
    var currentEndTime = null;
    var hasDrawn = false;
+   var resizeTimer = null;
    
    $(function(){
       //prevent the textboxs in the nav bar to close the dropdown menus
@@ -30,7 +31,9 @@
       });
       
       $(window).resize(function(){
-         drawGraph();
+         showBlackOut();
+         clearTimeout(resizeTimer);
+         resizeTimer = setTimeout(drawGraph, 500);
       });
          
       init();
@@ -63,9 +66,7 @@
    };
    
    function drawGraph(){
-      if(hasDrawn){
-         $("#chart").html("");
-      }
+      showBlackOut();
       d3.json('json.php?request=data&var='+currentVar+'&start='+currentStartTime.getTime()+'&end='+currentEndTime.getTime(), function(json){
          if(json['error']){
             throwError(json['error']);
@@ -75,14 +76,26 @@
       });
    }
    
+   function showBlackOut(){
+      $('.modal').fadeIn('fast');
+      $('.modal-backdrop').fadeIn('fast');
+   }
+   
+   function hideBlackOut(){
+      $('.modal').fadeOut('fast');
+      $('.modal-backdrop').fadeOut('fast');
+   }
+   
    function innerDraw(json){
-      var width = $(document).width();
-      var height = $(document).height() - 58; //58 for header bar
+      var axisMargin = 20;
+      var width = $(window).width();
+      var height = $(window).height() - 58 - axisMargin; //58 for header bar
       
       var minX = d3.min(json,function(d){ return d3.min(d,function(d){ return d.x; }); });
       var maxX = d3.max(json,function(d){ return d3.max(d,function(d){ return d.x; }); });
+      
       var maxY = d3.max(json,function(d){ return d3.max(d,function(d){ return d.y }); });
-
+      
       currentStartTime = new Date(minX);
       currentEndTime = new Date(maxX);
       drawStartAndEndTime();
@@ -94,36 +107,41 @@
 
       var y = d3.scale.linear().domain([0, maxY]).range([0, height/4]);
 
-
-      var vis = d3.select("#chart").append("svg").attr("width",width).attr("height",height);
-
-      var rules = vis.selectAll("g.rule")
-          .data(x.ticks(12))
-        .enter().append("g")
-          .attr("class", "rule");
-
-      rules.append("line")
-          .attr("x1", x)
-          .attr("x2", x)
-          .attr("y1", 0)
-          .attr("y2", height - 1);
-
-      rules.append("text")
-          .attr("x", x)
-          .attr("y", height - 13)
-          .attr("dy", ".71em")
-          .attr("text-anchor", "middle")
-          .text(x.tickFormat(12));
-
       var area = d3.svg.area()
                        .x(function(d){ return x(new Date(d.x)); })
                        .y0(function(d){ return y(d.y0); })
                        .y1(function(d){ return y(d.y + d.y0); });
+                       
+      var xAxis = d3.svg.axis().scale(x).orient("bottom");
 
-      var color = d3.interpolateRgb("#aad", "#556");
-
-      var i = 0;
-      vis.selectAll("path").data(data0).enter().append("path").style("fill",function(){ return color(i++/4); }).attr("d",area);
+      hideBlackOut();
+      
+      if(!hasDrawn){
+         var vis = d3.select("#chart").append("svg").attr("width",width).attr("height",height+axisMargin)
+                                      .append("g");
+         var color = d3.interpolateRgb("#aad", "#556");
+         
+         var i = 0;    
+         vis.selectAll("path").data(data0).enter().append("path").style("fill",function(){ return color(i++/4); }).attr("d",area);
+         
+         vis.append("g")
+              .attr("class", "x axis")
+              .attr("transform", "translate(0," + height + ")")
+              .call(xAxis);
+      }else{
+         var vis = d3.select("#chart")
+         
+         //resize the overall graph
+         vis.select("svg").attr("width",width).attr("height",height+axisMargin);
+         
+         //change the graph areas
+         d3.selectAll("path").data(data0).transition().duration(1000).attr("d", area);;
+         
+         //change the axis
+         vis.select(".x.axis").transition().duration(1000).call(xAxis);
+      }
+      
+      
       hasDrawn = true;
    }
    
@@ -178,5 +196,9 @@
    function formatTime(date){
       var format = d3.time.format("%I:%M %p");
       return format(date);
+   }
+   
+   function throwError(error){
+      alert("Error: "+ error + " Refresh the page.");
    }
 })();

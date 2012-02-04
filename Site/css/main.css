@@ -1,4 +1,8 @@
 /* Bootstrap override */
+.navbar{
+   margin-bottom:0px;
+}
+
 .navbar-inner{
    -webkit-border-radius: 0px;
    -moz-border-radius: 0px;
@@ -30,6 +34,24 @@
    background: #ccc;
 }
 
+.dropdown .caret{
+   float:right;
+}
+
+.modal-backdrop{
+   position:absolute;
+   z-index:100;
+}
+
+.modal{
+   margin-top:-50px;
+   margin-left:-100px;
+   width:200px;
+   line-height:16px;
+   font-size:14px;
+}
+
+
 /* Styles */
 
 body{
@@ -37,23 +59,28 @@ body{
    width: 100%;
    overflow-x:hidden;
    overflow-y:hidden;
-}
-
-.rule line{
-   stroke: #eee;
-   shape-rendering: crispEdges;
-}
-
-.rule text{
-  font-size: 10px;
+   background:#333;
 }
 
 #var_text,#start_text,#end_text{
    min-width:100px;
 }
 
-.dropdown .caret{
-   float:right;
+#chart{
+   position:relative;
+   padding-top:18px;
+   height:100%;
+   background:#fff;
+}
+
+.axis path, .axis line {
+  fill: none;
+  stroke: #000;
+  shape-rendering: crispEdges;
+}
+
+.axis text{
+   font-size:10px;
 }
 
 /* datepicker */
