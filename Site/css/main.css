@@ -45,10 +45,11 @@
 
 .modal{
    margin-top:-50px;
-   margin-left:-100px;
-   width:200px;
+   margin-left:-75px;
+   width:150px;
    line-height:16px;
    font-size:14px;
+   text-align:center;
 }
 
 

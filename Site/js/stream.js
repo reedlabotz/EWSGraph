@@ -16,20 +16,19 @@
       
       $("#start_done").click(function(e){
          setStartAndEndTime();
+         drawGraph();
       });
       
       $("#end_done").click(function(e){
          setStartAndEndTime();
+         drawGraph();
       });
       
       $("#var_choices").click(function(e){
          var id = e.srcElement.id;
          setVar(id.substring(4,id.length));
-      });
-      
-      $("#display_btn").click(function(){
-         drawGraph();
          window.location.hash = currentVar;
+         drawGraph();
       });
       
       $(window).resize(function(){
@@ -96,23 +95,24 @@
    
    function innerDraw(json){
       var axisMargin = 20;
+      var marginBottom = 10;
       var width = $(window).width();
-      var height = $(window).height() - 58 - axisMargin; //58 for header bar
+      var height = $(window).height() - 58 - axisMargin - marginBottom; //58 for header bar
       
       var minX = d3.min(json,function(d){ return d3.min(d,function(d){ return d.x; }); });
       var maxX = d3.max(json,function(d){ return d3.max(d,function(d){ return d.x; }); });
       
-      var maxY = d3.max(json,function(d){ return d3.max(d,function(d){ return d.y }); });
-      
       currentStartTime = new Date(minX);
       currentEndTime = new Date(maxX);
       drawStartAndEndTime();
-      
 
       var data0 = d3.layout.stack().offset("silhouette")(json);
+      
+      //calculate the max y stack
+      var maxY = d3.max(json,function(d){ return d3.max(d,function(d){ return d.y+d.y0 }); });
 
       var x = d3.time.scale().domain([new Date(minX), new Date(maxX)]).range([0, width]);
-      var y = d3.scale.linear().domain([0, maxY*numMachines]).range([0, height]);
+      var y = d3.scale.linear().domain([0, maxY]).range([0, height]);
 
       var area = d3.svg.area()
                        .x(function(d){ return x(new Date(d.x)); })
@@ -124,28 +124,28 @@
       hideBlackOut();
       
       if(!hasDrawn){
-         var vis = d3.select("#chart").append("svg").attr("width",width).attr("height",height+axisMargin)
+         var vis = d3.select("#chart").append("svg").attr("width",width).attr("height",height+axisMargin+marginBottom)
                                       .append("g");
-         var color = d3.interpolateRgb("#aad", "#556");
+         var color = d3.interpolateRgb("#84baff", "#2e4592");
          
          var i = 0;    
-         vis.selectAll("path").data(data0).enter().append("path").style("fill",function(){ return color(i++/4); }).attr("d",area);
+         vis.selectAll("path").data(data0).enter().append("path").style("fill",function(){ return color(i++/numMachines); }).attr("d",area);
          
          vis.append("g")
               .attr("class", "x axis")
-              .attr("transform", "translate(0," + height + ")")
+              .attr("transform", "translate(0," + (height + marginBottom) + ")")
               .call(xAxis);
       }else{
          var vis = d3.select("#chart")
          
          //resize the overall graph
-         vis.select("svg").attr("width",width).attr("height",height+axisMargin);
+         vis.select("svg").attr("width",width).attr("height",height+axisMargin+marginBottom);
          
          //change the graph areas
          d3.selectAll("path").data(data0).transition().duration(1000).attr("d", area);;
          
          //change the axis
-         vis.select(".x.axis").transition().duration(1000).call(xAxis);
+         vis.select(".x.axis").transition().duration(1000).call(xAxis).attr("transform", "translate(0," + (height + marginBottom) + ")");
       }
       
       
@@ -169,11 +169,14 @@
    function setStartAndEndTime(){
       var end_date = $("#end_date").data('datepicker').selectedDate;
       var end_time = Date.parse($("#end_time").val());
-      currentEndTime = new Date(end_date.getFullYear(),end_date.getMonth(),end_date.getDate(),end_time.getHours(),end_time.getMinutes());
+      currentEndTime = new Date(end_date.getFullYear(),end_date.getMonth(),end_date.getDate(),
+                                end_time.getHours(),end_time.getMinutes());
       
       var start_date = $("#start_date").data('datepicker').selectedDate;
       var start_time = Date.parse($("#start_time").val());
-      currentStartTime = new Date(start_date.getFullYear(),start_date.getMonth(),start_date.getDate(),start_time.getHours(),start_time.getMinutes());
+      currentStartTime = new Date(start_date.getFullYear(),start_date.getMonth(),start_date.getDate(),
+                                  start_time.getHours(),start_time.getMinutes());
+      
       drawStartAndEndTime();
    }
    
