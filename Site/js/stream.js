@@ -169,11 +169,17 @@
    function setStartAndEndTime(){
       var end_date = $("#end_date").data('datepicker').selectedDate;
       var end_time = Date.parse($("#end_time").val());
+      if(end_time == null){
+         end_time = Date.parse("12:00 PM");
+      }
       currentEndTime = new Date(end_date.getFullYear(),end_date.getMonth(),end_date.getDate(),
                                 end_time.getHours(),end_time.getMinutes());
       
       var start_date = $("#start_date").data('datepicker').selectedDate;
       var start_time = Date.parse($("#start_time").val());
+      if(start_time == null){
+         start_time = Date.parse("12:00 PM");
+      }
       currentStartTime = new Date(start_date.getFullYear(),start_date.getMonth(),start_date.getDate(),
                                   start_time.getHours(),start_time.getMinutes());
       

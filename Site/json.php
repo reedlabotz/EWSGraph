@@ -28,7 +28,7 @@ if($request == "data"){
       $end = date("Y-m-d H:i:s",mysql_real_escape_string($_GET['end'])/1000);
       $machines = array();
       $query = "SELECT machine_id,time,".$var." FROM `snapshots` JOIN `machines` ON `snapshots`.machine_id=`machines`.id ";
-      $query .="WHERE `machines`.active=1 AND `snapshots`.time >= '".$start."' AND `snapshots`.time <= '".$end."' ORDER BY `snapshots`.time"; 
+      $query .="WHERE `machines`.active=1 AND `snapshots`.time >= '".$start."' AND `snapshots`.time <= '".$end."' ORDER BY `snapshots`.machine_id,`snapshots`.time"; 
       $result =  mysql_query($query);
       while($row = mysql_fetch_array($result)){
          $m_id = $row['machine_id'];
