@@ -8,8 +8,8 @@
    $(function(){
       //prevent the textboxs in the nav bar to close the dropdown menus
       $('.dropdown-menu input[type="text"]').click(function (e) {
-      	e.stopPropagation();
-    	});
+         e.stopPropagation();
+      });
       
       $("#start_done").click(function(e){
          setStartAndEndTime();
@@ -32,8 +32,8 @@
       $(window).resize(function(){
          drawGraph();
       });
-         	
-   	init();
+         
+      init();
    });
    
    function init(){
