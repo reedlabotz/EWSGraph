@@ -39,14 +39,16 @@ if($request == "data"){
          array_push($data[$machines[$m_id]],array('x' => strtotime($row['time'])*1000, 'y' => floatval($row[$var])));
       }
    }
-}else if($request == "vars"){
-   $data = $variables;
-}else if($request == "machines"){
+}else if($request == "meta"){
+   $machines =  array();
    $query = "SELECT id,name FROM `machines` WHERE active=1";
    $result = mysql_query($query);
    while($row = mysql_fetch_array($result)){
-      $data[$row['id']] = $row['name'];
+      $machines[$row['id']] = $row['name'];
    }
+   
+   $data['machines'] = $machines;
+   $data['vars'] = $variables;
 }else{
    $data['error'] = "Invalid request type";
 }

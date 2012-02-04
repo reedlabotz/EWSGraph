@@ -1,5 +1,7 @@
 (function(){
    var vars = [];
+   var machines = [];
+   var numMachines = 0;
    var currentVar = null;
    var currentStartTime = null;
    var currentEndTime = null;
@@ -40,11 +42,17 @@
    });
    
    function init(){
-      $.getJSON('json.php?request=vars',function(json){
+      $.getJSON('json.php?request=meta',function(json){
          if(json['error']){
             throwError(json['error']);
          }
-         vars = json;
+         vars = json['vars'];
+         machines = json['machines'];
+         //get number of machines
+         var i=0;
+         for(m in machines) i++;
+         numMachines = i;
+         
          //set the end time to now
          currentEndTime = new Date();  
          //set the start time to yesturday
@@ -104,8 +112,7 @@
       var data0 = d3.layout.stack().offset("silhouette")(json);
 
       var x = d3.time.scale().domain([new Date(minX), new Date(maxX)]).range([0, width]);
-
-      var y = d3.scale.linear().domain([0, maxY]).range([0, height/4]);
+      var y = d3.scale.linear().domain([0, maxY*numMachines]).range([0, height]);
 
       var area = d3.svg.area()
                        .x(function(d){ return x(new Date(d.x)); })
