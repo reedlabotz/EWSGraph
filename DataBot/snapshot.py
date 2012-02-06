@@ -1,5 +1,7 @@
 from __future__ import print_function
 
+import logger
+
 def average_mid(counts):
   #get an average ignoring the biggest and smallest
   if(len(counts) > 2):
@@ -57,4 +59,4 @@ class Snapshot:
     sql = "INSERT INTO `snapshots` (machine_id,time,cpu_user,cpu_system,mem_used,mem_free,user_count,task_count) VALUES "
     sql +="('%d','%s','%f','%f','%d','%d','%d','%d')"%(self.machine.get_id(),self.time,self.cpu_user_avg,self.cpu_system_avg,self.mem_used_avg,self.mem_free_avg,self.user_count_avg,self.task_count_avg)
     dbcursor.execute(sql)
-    print("Inserted 1 snapshot")
+    logger.info("Inserted 1 snapshot")

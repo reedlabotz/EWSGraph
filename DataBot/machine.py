@@ -6,6 +6,7 @@ import re
 from datetime import datetime
 
 from snapshot import Snapshot
+import logger
 
 class Machine:
   def __init__(self,id,name,url):
@@ -32,7 +33,7 @@ class Machine:
       client.set_missing_host_key_policy(paramiko.WarningPolicy)
       client.connect(self.url,username=self.username,password=self.password)
 
-      print("Grabbing data from %s, should take 15 seconds" % self.name)
+      logger.info("Grabbing data from %s, should take 15 seconds" % self.name)
       stdin, stdout, stderr = client.exec_command('top -b -d3 -n5')
 
       data = stdout.readlines()
@@ -40,10 +41,9 @@ class Machine:
       self.process_output(data)
 
       client.close()
-      print("Got data from %s" % self.name)
+      logger.info("Got data from %s" % self.name)
     except Exception, e:
-      print("Error in SSH on host %s" % self.name)
-      traceback.print_exc()
+      logger.exception("Error in SSH on host %s" % self.name,e)
       try:
         client.close()
       except:
@@ -91,7 +91,7 @@ class Machine:
 
   def insert_db(self,dbcursor):
     if(self.snapshot):
-      print("Inserting snapshot for %s"%self.name)
+      logger.info("Inserting snapshot for %s"%self.name)
       self.snapshot.insert_db(dbcursor)
 
   def get_id(self):

@@ -4,6 +4,7 @@ import MySQLdb as mdb
 from threading import Thread
 
 from machine import Machine
+import logger
 
 #setup machines
 machines = []
@@ -24,10 +25,10 @@ linux4.set_credentials('labotz1','')
 machines.append(linux4)
 
 #setup database
-dbhost = 'dcs-projects.cs.illinois.edu'
-dbname = 'labotz1_EWSGraph'
-dbuser = 'labotz1_databot'
-dbpass = 'Me^G8eXD?=!v'
+dbhost = 'localhost'#'dcs-projects.cs.illinois.edu'
+dbname = 'EWSGraph'#'labotz1_EWSGraph'
+dbuser = 'root'#'labotz1_databot'
+dbpass = ''#'Me^G8eXD?=!v'
 
 
 #get the data from the machines
@@ -47,14 +48,14 @@ try:
   dbconnection = mdb.connect(dbhost,dbuser,dbpass,dbname)
   dbcursor = dbconnection.cursor()
   
-  print("Inserting into database")
+  logger.info("Inserting into database")
   for m in machines:
     m.insert_db(dbcursor)
 
 except mdb.Error, e:
-  print("Database error")
-  print(e)
+  logger.exception("Database error",e)
 finally:
   if(dbconnection):
     dbconnection.close()
 
+logger.emailLog()
