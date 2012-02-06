@@ -1,14 +1,15 @@
 import smtplib
 import string
+import datetime
 from email.mime.text import MIMEText
 
 log = []
 
 def info(s):
-   log.append(s)
+   log.append(datetime.datetime.now().strftime("%Y-%m-%d %H:%M") + '  ' + s)
    
 def exception(s,e):
-   log.append(s)
+   log.append(datetime.datetime.now().strftime("%Y-%m-%d %H:%M") + '  ERROR: ' + s)
    log.append("----------")
    log.append(e.__str__())
    log.append("----------")
