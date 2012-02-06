@@ -219,7 +219,6 @@
     , hide: function() {
         //this.$picker.hide();
         $('html').off('keydown', this.keyHandler);
-        //this.$picker.parent().toggle();
       }
 
     , keyHandler: function(e) {

@@ -43,7 +43,7 @@
    z-index:100;
 }
 
-.modal{
+.modal.loading{
    margin-top:-50px;
    margin-left:-75px;
    width:150px;
@@ -63,10 +63,6 @@ body{
    background:#333;
 }
 
-#var_text,#start_text,#end_text{
-   min-width:100px;
-}
-
 #chart{
    position:relative;
    padding-top:18px;
@@ -82,6 +78,44 @@ body{
 
 .axis text{
    font-size:10px;
+}
+
+.navbar .demo{
+   display: none;
+}
+
+#flashVar{
+   display:none;
+   position: fixed;
+   bottom: 30px;
+   left: 50%;
+   z-index: 1050;
+   opacity:.75;
+   -webkit-border-radius: 25px;
+   -moz-border-radius: 25px;
+   border-radius: 25px;
+   background:rgba(0,0,0,50);
+   margin-left:-250px;
+   width:500px;
+   line-height:70px;
+   font-size:14px;
+   text-align:center;
+   font-size:50px;
+   color:#fff;
+}
+
+#demoControls{
+   display: none;
+}
+
+.navbar .navCenter{
+   position:absolute;
+   left:50%;
+   width: 250px;
+   margin-left: -125px;
+   text-align: center;
+   padding-left: 0px;
+   padding-right: 0px;
 }
 
 /* datepicker */

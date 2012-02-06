@@ -24,11 +24,11 @@ if($request == "data"){
    if(!array_key_exists($var,$variables)){
       $data['error'] = "Invalid variable";
    }else{
-      $start = date("Y-m-d H:i:s",mysql_real_escape_string($_GET['start'])/1000);
-      $end = date("Y-m-d H:i:s",mysql_real_escape_string($_GET['end'])/1000);
+      $start = date("Y-m-d",mysql_real_escape_string($_GET['start'])/1000);
+      $end = date("Y-m-d",strtotime("+1 day",mysql_real_escape_string($_GET['end'])/1000));
       $machines = array();
       $query = "SELECT machine_id,time,".$var." FROM `snapshots`";
-      $query .="WHERE time >= '".$start."' AND time <= '".$end."' AND machine_id IN (SELECT machine_id FROM `machines` WHERE active=1) ORDER BY time,machine_id"; 
+      $query .="WHERE time >= '".$start."' AND time < '".$end."' AND machine_id IN (SELECT machine_id FROM `machines` WHERE active=1) ORDER BY time,machine_id"; 
       $result =  mysql_query($query);
       while($row = mysql_fetch_array($result)){
          $m_id = $row['machine_id'];

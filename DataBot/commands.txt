@@ -1,0 +1,5 @@
+//get the number of unique users
+who | awk '{ print $1 }' | sort | uniq | wc -l
+
+//get the idle time of users?
+w

@@ -4,17 +4,20 @@
    <script type="text/javascript" src="js/lib/jquery/jquery.min.js"></script>
    <link href="css/bootstrap.min.css" rel="stylesheet">
    <link href="css/main.css" rel="stylesheet">
+
+   <meta name="viewport" content="width=device-width,initial-scale=1">
 </head>
 <body>
    <div class="navbar">
       <div class="navbar-inner">
          <div class="container-fluid">
             <span class="brand">EWS Graph</span>
-            <ul class="nav pull-right">
+            <span class="brand var_text demo navCenter"></span>
+            <ul class="nav pull-right" id="controls">
                <li class="divider-vertical"></li>
                <li class="dropdown">
                   <label>Variable:</label>
-                  <a class="dropdown-toggle" data-toggle="dropdown" id="var_text"><span>&nbsp;</span><b class="caret"></b></a>
+                  <a class="dropdown-toggle" data-toggle="dropdown"><span class="var_text">&nbsp;</span><b class="caret"></b></a>
                   <ul class="dropdown-menu" id="var_choices">
                   </ul>
                </li>
@@ -24,8 +27,6 @@
                   <a class="dropdown-toggle" data-toggle="dropdown" id="start_text"><span>&nbsp;</span><b class="caret"></b></a>
                   <ul class="dropdown-menu datepicker-dropdown">
                      <input type="hidden" data-datepicker="datepicker" id="start_date">
-                     <input type="text" class="span2" id="start_time">
-                     <input type="button" class="span1" value="Done" style="float:right;" id="start_done">
                   </ul>
                </li>
                <li class="divider-vertical"></li>
@@ -34,10 +35,11 @@
                   <a class="dropdown-toggle" data-toggle="dropdown" id="end_text"><span>&nbsp;</span><b class="caret"></b></a>
                   <ul class="dropdown-menu datepicker-dropdown">
                      <input type="hidden" data-datepicker="datepicker" id="end_date">
-                     <input type="text" class="span2" id="end_time">
-                     <input type="button" class="span1" value="Done" style="float:right;" id="end_done">
                   </ul>
                </li>
+            </ul>
+            <ul class="nav pull-right demo">
+               <li><a href="#" id="endDemo">End Demo</a></li>
             </ul>
          </div>
       </div>
@@ -47,15 +49,16 @@
          <div class="modal-backdrop"></div>
       </div>
    </div>
-   <div id="myModal" class="modal">
+   <div id="myModal" class="modal loading">
       <div class="modal-body"><img src="img/ajax-loader.gif" width="16" height="16" alt=""> Loading...</div>
+   </div>
+   <div id="flashVar" class="var_text">
    </div>
    <script type="text/javascript" src="js/d3.min.js"></script>
    <script type="text/javascript" src="js/d3.layout.js"></script>
    <script type="text/javascript" src="js/d3.time.js"></script>
    <script type="text/javascript" src="js/bootstrap.min.js"></script>
    <script type="text/javascript" src="js/bootstrap-datepicker.js"></script>
-   <script type="text/javascript" src="js/date.js"></script>
    <script type="text/javascript" src="js/stream.js"></script>
 </body>
 </html>
