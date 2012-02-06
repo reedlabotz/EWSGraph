@@ -1,0 +1,33 @@
+###setup machines
+MACHINES = (
+   {
+      'ID':      1,
+      'NAME':    'linux1',
+      'URL':     'linux1.ews.illinois.edu',
+      'USERNAME':'labotz1',
+      'PASSWORD':''
+   }
+)
+
+###setup database
+DATABASE = {
+   'HOST':     'host',
+   'NAME':     'dbname',
+   'USERNAME': 'username',
+   'PASSWORD': 'password'
+}
+
+###logger settings
+LOGGER = {
+   'EMAIL': {
+      'FROM':   'you@gmail.com',
+      'TO':     'you@gmail.com',
+      'SUBJECT':'Databot Log'
+   }
+}
+#smtp
+SMTP = {
+   'SERVER':  'smtp.gmail.com:587',
+   'USERNAME':'you@gmail.com',
+   'PASSWORD':'password'
+}

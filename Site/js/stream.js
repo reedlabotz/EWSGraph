@@ -99,8 +99,10 @@
    }
    
    function showBlackOut(){
-      $('.modal').fadeIn('fast');
-      $('.modal-backdrop').fadeIn('fast');
+      if(!isDemo){
+         $('.modal').fadeIn('fast');
+         $('.modal-backdrop').fadeIn('fast');
+      }
    }
    
    function hideBlackOut(){

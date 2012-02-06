@@ -5,31 +5,13 @@ from threading import Thread
 
 from machine import Machine
 import logger
+import settings
 
-#setup machines
 machines = []
-linux1 = Machine(1,'linux1','linux1.ews.illinois.edu')
-linux1.set_credentials('labotz1','')
-machines.append(linux1)
-
-linux2 = Machine(2,'linux2','linux2.ews.illinois.edu')
-linux2.set_credentials('labotz1','')
-machines.append(linux2)
-
-linux3 = Machine(3,'linux3','linux3.ews.illinois.edu')
-linux3.set_credentials('labotz1','')
-machines.append(linux3)
-
-linux4 = Machine(4,'linux4','linux4.ews.illinois.edu')
-linux4.set_credentials('labotz1','')
-machines.append(linux4)
-
-#setup database
-dbhost = 'dcs-projects.cs.illinois.edu'
-dbname = 'labotz1_EWSGraph'
-dbuser = 'labotz1_databot'
-dbpass = 'Me^G8eXD?=!v'
-
+for mData in settings.MACHINES:
+   m = Machine(mData['ID'],mData['NAME'],mData['URL'])
+   m.set_credentials(mData['USERNAME'],mData['PASSWORD'])
+   machines.append(m)
 
 #get the data from the machines
 threads = []
@@ -45,7 +27,10 @@ for t in threads:
 dbconnection = None
 
 try:
-  dbconnection = mdb.connect(dbhost,dbuser,dbpass,dbname)
+  dbconnection = mdb.connect(settings.DATABASE['HOST'],
+                             settings.DATABASE['USERNAME'],
+                             settings.DATABASE['PASSWORD'],
+                             settings.DATABASE['NAME'])
   dbcursor = dbconnection.cursor()
   
   logger.info("Inserting into database")
