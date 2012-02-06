@@ -25,10 +25,10 @@ linux4.set_credentials('labotz1','')
 machines.append(linux4)
 
 #setup database
-dbhost = 'localhost'#'dcs-projects.cs.illinois.edu'
-dbname = 'EWSGraph'#'labotz1_EWSGraph'
-dbuser = 'root'#'labotz1_databot'
-dbpass = ''#'Me^G8eXD?=!v'
+dbhost = 'dcs-projects.cs.illinois.edu'
+dbname = 'labotz1_EWSGraph'
+dbuser = 'labotz1_databot'
+dbpass = 'Me^G8eXD?=!v'
 
 
 #get the data from the machines
