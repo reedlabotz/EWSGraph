@@ -37,7 +37,8 @@ class Machine:
       stdin, stdout, stderr = client.exec_command('top -b -d3 -n5')
 
       data = stdout.readlines()
-    
+
+      self.process_output(data)
 
       client.close()
       logger.info("Got data from %s" % self.name)
@@ -49,7 +50,6 @@ class Machine:
         pass
       return
 
-      self.process_output(data)
     #do the final processing for the snapshot
     self.snapshot.calc_averages()
 
