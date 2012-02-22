@@ -50,7 +50,7 @@ class Snapshot:
     self.task_count.append(task_count)
     
   def set_unique_users_count(self,unique_user_count):
-    self.unique_users_count = unique_user_count
+    self.unique_user_count = unique_user_count
 
   def calc_averages(self):
     self.cpu_user_avg = average_mid(self.cpu_user)

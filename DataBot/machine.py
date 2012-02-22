@@ -96,7 +96,8 @@ class Machine:
     return (int(m.group(1)),int(m.group(2)))
     
   def process_output_users(self,data):
-    self.snapshot.set_unique_users_count(len(set(data[0].split(' '))))
+    if(len(data) > 0):
+      self.snapshot.set_unique_users_count(len(set(data[0].split(' '))))
 
   def insert_db(self,dbcursor):
     if(self.snapshot):
