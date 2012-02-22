@@ -38,7 +38,6 @@ class Machine:
 
       data = stdout.readlines()
     
-      self.process_output(data)
 
       client.close()
       logger.info("Got data from %s" % self.name)
@@ -50,6 +49,7 @@ class Machine:
         pass
       return
 
+      self.process_output(data)
     #do the final processing for the snapshot
     self.snapshot.calc_averages()
 
@@ -74,7 +74,7 @@ class Machine:
       lineCounter+=1
 
   def process_output_line0(self,line):
-    m = re.search(r' (\d+) users',line)
+    m = re.search(r' (\d+) users?',line)
     return int(m.group(1))
 
   def process_output_line1(self,line):
