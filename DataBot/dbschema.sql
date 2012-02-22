@@ -7,7 +7,7 @@
 #
 # Host: dcs-projects.cs.illinois.edu (MySQL 5.0.92-community)
 # Database: labotz1_EWSGraph
-# Generation Time: 2012-02-06 04:14:19 +0000
+# Generation Time: 2012-02-22 17:35:01 +0000
 # ************************************************************
 
 
@@ -50,6 +50,7 @@ CREATE TABLE `snapshots` (
   `mem_free` int(10) NOT NULL,
   `user_count` int(10) NOT NULL,
   `task_count` int(10) NOT NULL,
+  `unique_user_count` int(10) NOT NULL,
   PRIMARY KEY  (`id`)
 ) ENGINE=MyISAM DEFAULT CHARSET=latin1;
 

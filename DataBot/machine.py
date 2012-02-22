@@ -39,6 +39,12 @@ class Machine:
       data = stdout.readlines()
 
       self.process_output(data)
+      
+      stdin, stdout, stderr = client.exec_command('users')
+      
+      data = stdout.readlines()
+      
+      self.process_output_users(data)
 
       client.close()
       logger.info("Got data from %s" % self.name)
@@ -88,6 +94,9 @@ class Machine:
   def process_output_line3(self,line):
     m = re.search(r'(\d+)k used,[ ]*(\d+)k free',line)
     return (int(m.group(1)),int(m.group(2)))
+    
+  def process_output_users(self,data):
+    self.snapshot.set_unique_users_count(len(set(data[0].split(' '))))
 
   def insert_db(self,dbcursor):
     if(self.snapshot):

@@ -32,6 +32,8 @@ class Snapshot:
     self.mem_free_avg = -1
     self.user_count_avg = -1
     self.task_count_avg = -1
+    
+    self.unique_user_count = -1
 
   def add_cpu_reading(self,cpu_user,cpu_system):
     self.cpu_user.append(cpu_user)
@@ -46,6 +48,9 @@ class Snapshot:
 
   def add_task_count_reading(self,task_count):
     self.task_count.append(task_count)
+    
+  def set_unique_users_count(self,unique_user_count):
+    self.unique_users_count = unique_user_count
 
   def calc_averages(self):
     self.cpu_user_avg = average_mid(self.cpu_user)
@@ -56,7 +61,7 @@ class Snapshot:
     self.task_count_avg = average_mid(self.task_count)
 
   def insert_db(self,dbcursor):
-    sql = "INSERT INTO `snapshots` (machine_id,time,cpu_user,cpu_system,mem_used,mem_free,user_count,task_count) VALUES "
-    sql +="('%d','%s','%f','%f','%d','%d','%d','%d')"%(self.machine.get_id(),self.time,self.cpu_user_avg,self.cpu_system_avg,self.mem_used_avg,self.mem_free_avg,self.user_count_avg,self.task_count_avg)
+    sql = "INSERT INTO `snapshots` (machine_id,time,cpu_user,cpu_system,mem_used,mem_free,user_count,task_count,unique_user_count) VALUES "
+    sql +="('%d','%s','%f','%f','%d','%d','%d','%d','%d')"%(self.machine.get_id(),self.time,self.cpu_user_avg,self.cpu_system_avg,self.mem_used_avg,self.mem_free_avg,self.user_count_avg,self.task_count_avg,self.unique_user_count)
     dbcursor.execute(sql)
     logger.info("Inserted 1 snapshot")
