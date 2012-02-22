@@ -10,6 +10,10 @@
    var resizeTimer = null;
    var isDemo = false;
    var demoTimer = null;
+   var xScale = null;
+   var lastJson = null;
+   
+   var yAxisHold = null;
    
    var DEMO_TIME = 20000;
    
@@ -40,6 +44,8 @@
          $(".demo").hide();
       });
       
+      $("#chart").mousemove(chartMouseover);
+      
       $(window).resize(function(){
          showBlackOut();
          clearTimeout(resizeTimer);
@@ -48,6 +54,42 @@
          
       init();
    });
+   
+   function chartMouseover(e){
+      var x = e.pageX;
+      var width = $(window).width();
+      var guessIndex = Math.round(x/width*lastJson[0].length);
+      var ourPoints = new Array();
+      for(i=0;i<numMachines;i++){
+         ourPoints.push(lastJson[i][guessIndex]);
+      }
+      
+      yAxisHold.attr("transform", "translate("+x+",0)");
+      $(yAxisHold.select("line")).tooltip({animation:false,
+                                           delay:{ show: 0, hide: 500 },
+                                           placement:'right',
+                                           trigger: 'manual',
+                                           title: '<div id="hoverInfo"></div>',      
+                                           }).tooltip('show');
+                                           
+      $("#hoverInfo").html(formatInfo(ourPoints));
+                                           
+                               
+   }
+   
+   function formatInfo(ourPoints){
+      var theDate = new Date(ourPoints[0].x);
+      var format = d3.time.format("%a %b %e %H:%M %Y")
+      var text = "";
+      for(var i=0;i<numMachines;i++){
+         if(ourPoints[i].y > -1){
+            text += machines[i+1] + ": " + ourPoints[i].y + "<br>";
+         }else{
+            text += machines[i+1] + ": error<br>";
+         }
+      }
+      return "<p><strong>" + format(theDate) + "</strong></p>" + text;
+   }
    
    function init(){
       if(parseHash(window.location.hash)[0] == "demo"){
@@ -111,6 +153,7 @@
    }
    
    function innerDraw(json){
+      lastJson = json;
       var axisMargin = 20;
       var marginBottom = 10;
       var width = $(window).width();
@@ -129,6 +172,7 @@
       var maxY = d3.max(json,function(d){ return d3.max(d,function(d){ return d.y+d.y0 }); });
 
       var x = d3.time.scale().domain([new Date(minX), new Date(maxX)]).range([0, width]);
+      xScale = x;
       var y = d3.scale.linear().domain([0, maxY]).range([0, height]);
 
       var area = d3.svg.area()
@@ -148,23 +192,43 @@
          
          var i = 0;    
          vis.selectAll("path").data(data).enter().append("path").style("fill","#fff")
-            .transition().duration(1000).style("fill",function(){ return color(i++/numMachines); }).attr("d",area);
+            .transition().duration(1000).style("fill",function(){ return color(i++/numMachines); })
+            .attr("d",area);
          
          vis.append("g")
               .attr("class", "x axis")
               .attr("transform", "translate(0," + (height + marginBottom) + ")")
-              .call(xAxis);
+              .call(xAxis);  
+              
+         
+        var yAxis = d3.svg.line().x(function(x){return 1;}).y(function(y){return y;});
+
+        yAxisHold = vis.append("g")
+           .attr("class", "y axis")
+           .attr("transform", "translate(40,0)")
+
+        var line = yAxisHold.append("svg:line")
+               .attr("x1", 0)
+               .attr("y1", 0)
+               .attr("x2", 0)
+               .attr("y2", height);
+         
+         
+               
+            
       }else{
          var vis = d3.select("#chart")
          
          //resize the overall graph
          vis.select("svg").attr("width",width).attr("height",height+axisMargin+marginBottom);
       
-         d3.selectAll("path").data(data).transition().duration(1000).attr("d", area);
+         vis.selectAll("path").data(data).transition().duration(1000).attr("d", area);
          
          //change the axis
          vis.select(".x.axis").transition().duration(1000).call(xAxis)
             .attr("transform", "translate(0," + (height + marginBottom) + ")");
+               
+         vis.select(".y.axis line").transition().duration(1000).attr("y2", height);
       }
       
       if(isDemo){

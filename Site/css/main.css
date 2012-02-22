@@ -52,6 +52,10 @@
    text-align:center;
 }
 
+.tooltip{
+   z-index:800;
+}
+
 
 /* Styles */
 
@@ -116,6 +120,16 @@ body{
    text-align: center;
    padding-left: 0px;
    padding-right: 0px;
+}
+
+.chartPopoverPlace{
+   position:absolute;
+   top:0px;
+   left:0px;
+}
+
+.tooltip-inner #hoverInfo{
+   text-align:left;
 }
 
 /* datepicker */
