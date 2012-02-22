@@ -98,7 +98,8 @@ class Machine:
   def process_output_users(self,data):
     if(len(data) > 0):
       self.snapshot.set_unique_users_count(len(set(data[0].split(' '))))
-
+    else:
+      self.snapshot.set_unique_users_count(0)
   def insert_db(self,dbcursor):
     if(self.snapshot):
       logger.info("Inserting snapshot for %s"%self.name)
