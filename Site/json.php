@@ -6,6 +6,7 @@ $dbpass = 'Me^G8eXD?=!v';
 $host = 'dcs-projects.cs.illinois.edu';
 
 $variables = array("user_count" => "User Count",
+                   "unique_user_count" => "Unique User Count",
                    "task_count" => "Task Count",
                    "cpu_user" => "CPU User",
                    "cpu_system" => "CPU System",
