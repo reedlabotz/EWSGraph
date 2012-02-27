@@ -88,7 +88,7 @@ class Machine:
     return int(m.group(1))
 
   def process_output_line2(self,line):
-    m = re.search(r' (\d+.\d+)%us,[ ]*(\d+.\d+)%sy',line)
+    m = re.search(r' (\d*.\d*)%us,[ ]*(\d*.\d*)%sy',line)
     return (float(m.group(1)),float(m.group(2)))
   
   def process_output_line3(self,line):
