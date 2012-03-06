@@ -31,7 +31,7 @@ class Machine:
       client = paramiko.SSHClient()
       client.load_system_host_keys()
       client.set_missing_host_key_policy(paramiko.WarningPolicy)
-      client.connect(self.url,username=self.username,password=self.password)
+      client.connect(self.url,username=self.username,password=self.password,timeout=15)
 
       logger.info("Grabbing data from %s, should take 15 seconds" % self.name)
       stdin, stdout, stderr = client.exec_command('top -b -d3 -n5')
