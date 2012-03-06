@@ -3,8 +3,7 @@ from __future__ import print_function
 import logger
 import md5
 import json
-
-SECRET_KEY = "Zw6n2zedQx87FtRrsluuHhot04XQrX4r"
+import settings
 
 def average_mid(counts):
   #get an average ignoring the biggest and smallest
@@ -60,7 +59,7 @@ class Snapshot:
   def set_users(self,users):
     hashes = []
     for u in users:
-      hashes.append(md5.md5(u+SECRET_KEY).hexdigest())
+      hashes.append(md5.md5(u+settings.SECRET_KEY).hexdigest())
     self.users = json.dumps(hashes)
 
   def calc_averages(self):
