@@ -10,7 +10,6 @@ $variables = array("user_count" => "User Count",
                    "task_count" => "Task Count",
                    "cpu_user" => "CPU User",
                    "cpu_system" => "CPU System",
-                   "cpu_total" => "Total CPU",
                    "mem_used" => "Memory Used",
                    "mem_free" => "Memory Free",
                    "cpu_per_user" => "CPU per User");
@@ -28,9 +27,7 @@ if($request == "data"){
       $data['error'] = "Invalid variable";
    }else{
       if($var == "cpu_per_user"){
-         $var = '(cpu_user+cpu_system)/unique_user_count';
-      }elseif($var == "cpu_total"){
-         $var = 'cpu_user + cpu_system';
+         $var = 'cpu_user/unique_user_count';
       }
       $start = date("Y-m-d",mysql_real_escape_string($_GET['start'])/1000);
       $end = date("Y-m-d",strtotime("+1 day",mysql_real_escape_string($_GET['end'])/1000));
